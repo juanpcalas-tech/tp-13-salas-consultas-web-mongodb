@@ -1,0 +1,76 @@
+<header class="cabecera-pagina">
+    <div>
+        <p class="etiqueta">LISTA DE SALAS RESERVADAS</p>
+        <h1>
+            <%= titulo %>
+        </h1>
+    </div>
+    <a class="boton" href="/reservas/nueva">Agregar NUEVA RESERVA</a>
+</header>
+<form class="consulta" action="/reservas" method="get" aria-label="Consultar reservas">
+    <section>
+    <label for="q">Buscar por estudiante</label>
+    <input id="q" name="q" value="<%= criterios.q %>" maxlength="60">
+    <label for="sala">Sala</label>
+    <input id="sala" name="sala" value="<%= criterios.sala %>" maxlength="40" list="opciones-filtro">
+    <datalist id="opciones-filtro">
+        <option value="Sala Sur"></option>
+        <option value="Sala Norte"></option>
+        <option value="Sala Multimedia"></option>
+    </datalist>
+    <label for="orden">Ordenar por</label>
+    <select id="orden" name="orden">
+        <option value="estudiante" <%=criterios.orden==="estudiante" ? "selected" : "" %>>Estudiante</option>
+        <option value="personas-asc" <%=criterios.orden==="personas-asc" ? "selected" : "" %>>Persona de menor
+            a mayor</option>
+        <option value="personas-desc" <%=criterios.orden==="personas-desc" ? "selected" : "" %>>Persona de
+            mayor a menor</option>
+    </select>
+    </section>
+    <section>
+    <label for="limite">Resultados por página (1 a 20)</label>
+    <input id="limite" name="limite" type="number" min="1" max="20" value="<%= criterios.limite %>">
+    </section>
+    <button type="submit">Buscar</button>
+    <a href="/reservas">Limpiar criterios</a>
+</form>
+<p>Total de coincidencias: <%= resultado.total %>
+</p>
+<% if (reservas.length===0) { %>
+    <% if (resultado.total===0) { %>
+        <p>No hay coincidencias para estos criterios.</p>
+        <% } else { %>
+            <p>Esta página no tiene resultados. La consulta sí tiene coincidencias.</p>
+            <a href="<%= enlacePagina(1) %>">Volver a la primera página</a>
+            <% } %>
+                <% } else { %>
+                    <section class="grilla" aria-label="Reservas disponibles">
+                        <% reservas.forEach((reserva)=> { %>
+                            <article class="tarjeta">
+                                <p class="etiqueta">
+                                    <%= reserva.sala %>
+                                </p>
+                                <h2>
+                                    <%= reserva.estudiante %>
+                                </h2>
+                                <p class="personas">Personas: <%= reserva.personas.toLocaleString("es-AR") %>
+                                </p>
+                                 <p>Estado: <%= reserva.estado.toLocaleString("es-AR") %>
+                                </p>
+                                <a href="/reservas/<%= reserva.id %>">Ver detalle</a>
+                            </article>
+                            <% }) %>
+                    </section>
+                    <% } %>
+                        <% if (resultado.paginas> 0 && resultado.pagina <= resultado.paginas) { %>
+                                <nav aria-label="Páginas de resultados">
+                                    <p>Página <%= resultado.pagina %> de <%= resultado.paginas %>
+                                    </p>
+                                    <% if (resultado.pagina> 1) { %>
+                                        <a href="<%= enlacePagina(resultado.pagina - 1) %>">Anterior</a>
+                                        <% } %>
+                                            <% if (resultado.pagina < resultado.paginas) { %>
+                                                <a href="<%= enlacePagina(resultado.pagina + 1) %>">Siguiente</a>
+                                                <% } %>
+                                </nav>
+                                <% } %>

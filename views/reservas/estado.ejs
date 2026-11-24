@@ -1,0 +1,22 @@
+<article class="detalle">
+    <!--<section class="formulario"> -->
+    <h1>Cambiar estado</h1>
+    <p>Se modifica solo Estado pendiente o confirmada. Los demás datos se conservan.</p>
+    <% if (error) { %>
+        <p role="alert">
+            <%= error %>
+        </p>
+        <% } %>
+            <form action="/reservas/<%= id %>/estado" method="post" class="formulario">
+                <label for="estado">Cambiar Estado</label>
+
+                <select id="estado" name="estado" required>
+                    <option value="" disabled <%=(valores.estado !=='pendiente' && valores.estado !=='confirmada' )
+                        ? 'selected' : '' %>>Elegí una opción</option>
+                    <option value="pendiente" <%=valores.estado==='pendiente' ? 'selected' : '' %>>pendiente</option>
+                    <option value="confirmada" <%=valores.estado==='confirmada' ? 'selected' : '' %>>confirmada</option>
+                </select>
+                <button type="submit">Guardar estado</button>
+                <a href="/reservas/<%= id %>">Cancelar</a>
+            </form>
+</article>
